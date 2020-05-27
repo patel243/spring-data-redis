@@ -102,8 +102,8 @@ fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeWithScoresAsFlow(key: K
  * @author Sebastien Deleuze
  * @since 2.2
  */
-fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByScoreAsFlow(key: K, range: Range<Double>, limit: Limit? = null): Flow<V> =
-		(if (limit == null) rangeByScore(key, range) else rangeByScore(key, range, limit)).asFlow()
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByScoreAsFlow(key: K, range: Range<Double>, limit: Limit = Limit.unlimited()): Flow<V> =
+		rangeByScore(key, range, limit).asFlow()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.rangeByScoreWithScores].
@@ -111,8 +111,8 @@ fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByScoreAsFlow(key: K, r
  * @author Sebastien Deleuze
  * @since 2.2
  */
-fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByScoreWithScoresAsFlow(key: K, range: Range<Double>, limit: Limit? = null): Flow<TypedTuple<V>> =
-		(if (limit == null) rangeByScoreWithScores(key, range) else rangeByScoreWithScores(key, range, limit)).asFlow()
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByScoreWithScoresAsFlow(key: K, range: Range<Double>, limit: Limit = Limit.unlimited()): Flow<TypedTuple<V>> =
+		rangeByScoreWithScores(key, range, limit).asFlow()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.reverseRange].
@@ -138,8 +138,8 @@ fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeWithScoresAsFlow
  * @author Sebastien Deleuze
  * @since 2.2
  */
-fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreAsFlow(key: K, range: Range<Double>, limit: Limit? = null): Flow<V> =
-		(if (limit == null) reverseRangeByScore(key, range) else reverseRangeByScore(key, range, limit)).asFlow()
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreAsFlow(key: K, range: Range<Double>, limit: Limit = Limit.unlimited()): Flow<V> =
+		reverseRangeByScore(key, range, limit).asFlow()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.reverseRangeByScoreWithScores].
@@ -147,8 +147,8 @@ fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreAsFlow(ke
  * @author Sebastien Deleuze
  * @since 2.2
  */
-fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreWithScoresAsFlow(key: K, range: Range<Double>, limit: Limit? = null): Flow<TypedTuple<V>> =
-		(if (limit == null) reverseRangeByScoreWithScores(key, range) else reverseRangeByScoreWithScores(key, range, limit)).asFlow()
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreWithScoresAsFlow(key: K, range: Range<Double>, limit: Limit = Limit.unlimited()): Flow<TypedTuple<V>> =
+		reverseRangeByScoreWithScores(key, range, limit).asFlow()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.count].
@@ -158,6 +158,15 @@ fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByScoreWithScore
  */
 suspend fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.countAndAwait(key: K, range: Range<Double>): Long =
 		count(key, range).awaitSingle()
+
+/**
+ * Coroutines variant of [ReactiveZSetOperations.size].
+ *
+ * @author Wonwoo Lee
+ * @since 2.3
+ */
+suspend fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.sizeAndAwait(key: K): Long =
+	size(key).awaitSingle()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.score].
@@ -257,6 +266,24 @@ suspend fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.intersectAndStoreAnd
  */
 suspend fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.intersectAndStoreAndAwait(key: K, otherKeys: Collection<K>, destKey: K, aggregate: RedisZSetCommands.Aggregate, weights: RedisZSetCommands.Weights): Long =
 		intersectAndStore(key, otherKeys, destKey, aggregate, weights).awaitSingle()
+
+/**
+ * Coroutines variant of [ReactiveZSetOperations.rangeByLex].
+ *
+ * @author Wonwoo Lee
+ * @since 2.3
+ */
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.rangeByLexAndAwait(key: K, range: Range<String>, limit: Limit = Limit.unlimited()): Flow<V> =
+	rangeByLex(key, range, limit).asFlow()
+
+/**
+ * Coroutines variant of [ReactiveZSetOperations.reverseRangeByLex].
+ *
+ * @author Wonwoo Lee
+ * @since 2.3
+ */
+fun <K : Any, V : Any> ReactiveZSetOperations<K, V>.reverseRangeByLexAndAwait(key: K, range: Range<String>, limit: Limit = Limit.unlimited()): Flow<V> =
+	reverseRangeByLex(key, range, limit).asFlow()
 
 /**
  * Coroutines variant of [ReactiveZSetOperations.delete].

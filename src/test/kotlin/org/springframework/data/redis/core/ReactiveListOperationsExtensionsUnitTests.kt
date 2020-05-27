@@ -31,6 +31,7 @@ import java.time.Duration
  *
  * @author Mark Paluch
  * @author Sebastien Deleuze
+ * @author Wonwoo Lee
  */
 class ReactiveListOperationsExtensionsUnitTests {
 
@@ -331,6 +332,36 @@ class ReactiveListOperationsExtensionsUnitTests {
 
 		verify {
 			operations.rightPop("foo", Duration.ofDays(1))
+		}
+	}
+
+	@Test // DATAREDIS-1111
+	fun rightPopAndLeftPush() {
+
+		val operations = mockk<ReactiveListOperations<String, String>>()
+		every { operations.rightPopAndLeftPush(any(), any()) } returns Mono.just("foo")
+
+		runBlocking {
+			assertThat(operations.rightPopAndLeftPushAndAwait("foo", "bar")).isEqualTo("foo")
+		}
+
+		verify {
+			operations.rightPopAndLeftPush("foo", "bar")
+		}
+	}
+
+	@Test // DATAREDIS-1111
+	fun blockingRightPopAndLeftPush() {
+
+		val operations = mockk<ReactiveListOperations<String, String>>()
+		every { operations.rightPopAndLeftPush(any(), any(), Duration.ofDays(1)) } returns Mono.just("foo")
+
+		runBlocking {
+			assertThat(operations.rightPopAndLeftPushAndAwait("foo", "bar", Duration.ofDays(1))).isEqualTo("foo")
+		}
+
+		verify {
+			operations.rightPopAndLeftPush("foo", "bar", Duration.ofDays(1))
 		}
 	}
 
